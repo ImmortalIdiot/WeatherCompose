@@ -50,7 +50,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
-    implementation(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.json)
