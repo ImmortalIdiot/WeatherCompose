@@ -2,6 +2,7 @@ package com.immortalidiot.weathercompose.data.model
 
 import com.google.gson.annotations.SerializedName
 import com.immortalidiot.weathercompose.data.utils.DateManager
+import com.immortalidiot.weathercompose.data.utils.FormatManager
 import com.immortalidiot.weathercompose.domain.model.DailyForecast
 import kotlin.math.roundToInt
 
@@ -17,7 +18,7 @@ data class ForecastDto(@SerializedName("list") val forecasts: List<ForecastItemD
                 val avgTemp = (maxTemp + minTemp) / 2
                 val mostFrequencyWeather = items
                     .flatMap { it.weather }
-                    .groupingBy { it.main }
+                    .groupingBy { it.description }
                     .eachCount()
                     .maxByOrNull { it.value }?.key ?: "Unknown"
 
@@ -30,7 +31,7 @@ data class ForecastDto(@SerializedName("list") val forecasts: List<ForecastItemD
                 DailyForecast(
                     date = date,
                     averageTemp = avgTemp.roundToInt(),
-                    weatherDescription = mostFrequencyWeather,
+                    weatherDescription = FormatManager.uppercaseFirst(mostFrequencyWeather),
                     humidity = items.map { it.forecastMain.humidity }.average().roundToInt(),
                     pressure = items.map { it.forecastMain.pressure }.average().roundToInt(),
                     windSpeed = (items.map { it.wind.speed }.average() * 3600 / 1000).roundToInt(),

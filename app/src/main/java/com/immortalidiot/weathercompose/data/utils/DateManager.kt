@@ -8,8 +8,6 @@ object DateManager {
     fun toDateString(timestamp: Long): String {
         val simpleFormatter = SimpleDateFormat("EEEE, d MMMM, yyyy", Locale.getDefault())
         val formated = simpleFormatter.format(Date(timestamp * Constants.MILLISECONDS_PER_SECONDS))
-        return formated.replaceFirstChar {
-            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-        }
+        return FormatManager.uppercaseFirst(formated)
     }
 }
