@@ -10,4 +10,8 @@
     <string name="celsius_temp_scale">°C</string>
     <string name="pressure_scale">кПа</string>
     <string name="speed_scale">км/ч</string>
+
+    <string name="request_permission">Запросить разрешение</string>
+    <string name="need_geo_position">Для работы приложения нужен доступ к местоположению</string>
+    <string name="geo_position_denied">Доступ к местоположению не предоставлен</string>
 </resources>
