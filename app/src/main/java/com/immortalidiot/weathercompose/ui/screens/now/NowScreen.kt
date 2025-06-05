@@ -1,0 +1,109 @@
+package com.immortalidiot.weathercompose.ui.screens.now
+
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import cafe.adriel.voyager.core.screen.Screen
+
+object NowScreen : Screen {
+    private fun readResolve(): Any = NowScreen
+
+    @Composable
+    override fun Content() {
+        val viewModel: NowViewModel = hiltViewModel()
+        NowWeatherScreenComposable(viewModel = viewModel)
+    }
+}
+
+@Composable
+fun NowWeatherScreenComposable(viewModel: NowViewModel) {
+    val context = LocalContext.current
+    val requestPermission = Manifest.permission.ACCESS_FINE_LOCATION
+
+    var permissionGranted by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context,
+                requestPermission
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
+    var shouldShowRationale by remember { mutableStateOf(false) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        permissionGranted = granted
+
+        shouldShowRationale = !granted && ActivityCompat.shouldShowRequestPermissionRationale(
+            context as Activity,
+            requestPermission
+        )
+    }
+
+    LaunchedEffect(Unit) {
+        if (!permissionGranted) {
+            launcher.launch(requestPermission)
+        }
+    }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (permissionGranted) {
+                val weather = viewModel.weather.collectAsState().value
+
+                weather?.let {
+                    Text(text = weather.latitude.toString())
+                    Text(text = weather.longitude.toString())
+                    Text(text = weather.locationName)
+                    Text(text = weather.weatherMain)
+                    Text(text = weather.windSpeed.toString())
+                }
+            } else {
+                if (shouldShowRationale) {
+                    Text("Для отображения погоды нужно разрешение на местоположение.")
+                } else {
+                    Text("Разрешение не предоставлено.")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = { launcher.launch(requestPermission) }) {
+                    Text("Запросить разрешение")
+                }
+            }
+        }
+    }
+}
