@@ -35,11 +35,12 @@ class WeeklyViewModel @Inject constructor(
                     val forecasts = getForecastsUseCase()
                     _forecasts.value = forecasts
                     _uiState.value = ScreenUiState.Loaded
+                    delay(Constants.WEATHER_QUERY_DURATION)
                 } catch (e: Exception) {
                     Log.d("WeeklyError", e.message.toString())
                     _uiState.value = ScreenUiState.Error(e.message ?: "Неизвестная ошибка")
+                    delay(Constants.UI_STATE_DELAY)
                 }
-                delay(Constants.WEATHER_QUERY_DURATION)
             }
         }
     }
