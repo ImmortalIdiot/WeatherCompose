@@ -1,7 +1,9 @@
 package com.immortalidiot.weathercompose.data.model
 
 import com.google.gson.annotations.SerializedName
+import com.immortalidiot.weathercompose.data.utils.FormatManager
 import com.immortalidiot.weathercompose.domain.model.Weather
+import kotlin.math.roundToInt
 
 data class WeatherDto(
     @SerializedName("coord") val coord: CoordinatesDto,
@@ -16,9 +18,9 @@ data class WeatherDto(
             latitude = coord.lat,
             longitude = coord.lon,
             locationName = name,
-            weatherMain = w.main,
-            temperature = main.temp,
-            feelsLike = main.feelsLike,
+            weatherMain = FormatManager.uppercaseFirst(w.description),
+            temperature = main.temp.roundToInt(),
+            feelsLike = main.feelsLike.roundToInt(),
             humidity = main.humidity,
             pressure = main.pressure,
             windSpeed = wind.speed,
