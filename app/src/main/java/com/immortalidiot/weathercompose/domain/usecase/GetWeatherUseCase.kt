@@ -1,14 +1,21 @@
 package com.immortalidiot.weathercompose.domain.usecase
 
 import com.immortalidiot.weathercompose.domain.model.Weather
+import com.immortalidiot.weathercompose.domain.repository.LocationProvider
 import com.immortalidiot.weathercompose.domain.repository.WeatherRepository
+import javax.inject.Inject
 
-class GetWeatherUseCase(private val repository: WeatherRepository) {
-    suspend operator fun invoke(latitude: Double?, longitude: Double?): Weather {
-        return if (latitude != null && longitude != null) {
-            repository.getWeatherByCoordinates(latitude, longitude)
-        } else {
-            throw IllegalArgumentException("Coordinates or city must be provided")
-        }
+class GetWeatherUseCase @Inject constructor(
+    private val repository: WeatherRepository,
+    private val locationProvider: LocationProvider
+) {
+    suspend operator fun invoke(): Weather {
+        val location = locationProvider.getCurrentLocation()
+            ?: throw IllegalStateException("Location unavailable")
+
+        return repository.getWeatherByCoordinates(
+            latitude = location.latitude,
+            longitude = location.longitude
+        )
     }
 }

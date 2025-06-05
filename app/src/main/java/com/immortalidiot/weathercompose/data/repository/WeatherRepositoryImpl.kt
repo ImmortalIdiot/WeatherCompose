@@ -4,8 +4,9 @@ import com.immortalidiot.weathercompose.BuildConfig
 import com.immortalidiot.weathercompose.data.network.WeatherAPI
 import com.immortalidiot.weathercompose.domain.model.Weather
 import com.immortalidiot.weathercompose.domain.repository.WeatherRepository
+import javax.inject.Inject
 
-class WeatherRepositoryImpl(private val api: WeatherAPI) : WeatherRepository {
+class WeatherRepositoryImpl @Inject constructor(private val api: WeatherAPI) : WeatherRepository {
     override suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double): Weather {
         return api.getWeatherByCoordinates(
             latitude = latitude,
