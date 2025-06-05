@@ -44,7 +44,7 @@ ___
 
 1.1 Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/ImmortalIdiot/AndroidNavigation.git
+   git clone https://github.com/ImmortalIdiot/WeatherCompose.git
    ```
 1.2 Запустите приложение через среду на эмуляторе или подключенном устройстве.
 
