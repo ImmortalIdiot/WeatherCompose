@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.retrofit.converter.json)
 
     implementation(libs.play.services.location)
+    implementation(libs.play.services.coroutines)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
