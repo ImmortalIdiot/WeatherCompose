@@ -30,6 +30,7 @@ import com.immortalidiot.weathercompose.R
 import com.immortalidiot.weathercompose.ui.components.PermissionHandler
 import com.immortalidiot.weathercompose.ui.components.bars.ApplicationAppBar
 import com.immortalidiot.weathercompose.ui.components.buttons.ToWeeklyWeatherButton
+import com.immortalidiot.weathercompose.ui.screens.ScreenStateHandler
 import com.immortalidiot.weathercompose.ui.screens.weekly.WeeklyScreen
 
 object NowScreen : Screen {
@@ -44,6 +45,8 @@ object NowScreen : Screen {
 
 @Composable
 fun NowWeatherScreenComposable(viewModel: NowViewModel) {
+    val uiState = viewModel.uiState.collectAsState().value
+
     val navigator = LocalNavigator.currentOrThrow
 
     val mainContentStyle = MaterialTheme.typography.titleLarge.copy(fontSize = 30.sp)
@@ -65,82 +68,87 @@ fun NowWeatherScreenComposable(viewModel: NowViewModel) {
             rationaleText = stringResource(R.string.need_geo_position),
             deniedText = stringResource(R.string.geo_position_denied)
         ) {
-            Box(
+            ScreenStateHandler(
+                state = uiState,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
+                    .padding(innerPadding)
             ) {
-                val weather = viewModel.weather.collectAsState().value
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    val weather = viewModel.weather.collectAsState().value
 
-                weather?.let {
-                    Column(
-                        modifier = Modifier.align(Alignment.TopCenter),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = weather.locationName,
-                            style = mainContentStyle
-                        )
-
-                        VerticalScreenSpacer(height = 8.dp)
-
-                        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                            Text(
-                                text = stringResource(R.string.latitude) + " " +
-                                        weather.latitude.toString(),
-                                style = contentStyle
-                            )
-                            Text(
-                                text = stringResource(R.string.longitude) + " " +
-                                        weather.longitude.toString(),
-                                style = contentStyle
-                            )
-                        }
-                    }
-
-                    Column(
-                        modifier = Modifier.align(Alignment.Center),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = weather.temperature.toString() +
-                                    stringResource(R.string.celsius_temp_scale),
-                            style = temperatureStyle
-                        )
-                        Text(
-                            text = stringResource(R.string.feels_like) + " " + weather.feelsLike,
-                            style = contentStyle
-                        )
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    weather?.let {
+                        Column(
+                            modifier = Modifier.align(Alignment.TopCenter),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = weather.weatherMain,
+                                text = weather.locationName,
+                                style = mainContentStyle
+                            )
+
+                            VerticalScreenSpacer(height = 8.dp)
+
+                            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                                Text(
+                                    text = stringResource(R.string.latitude) + " " +
+                                            weather.latitude.toString(),
+                                    style = contentStyle
+                                )
+                                Text(
+                                    text = stringResource(R.string.longitude) + " " +
+                                            weather.longitude.toString(),
+                                    style = contentStyle
+                                )
+                            }
+                        }
+
+                        Column(
+                            modifier = Modifier.align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = weather.temperature.toString() +
+                                        stringResource(R.string.celsius_temp_scale),
+                                style = temperatureStyle
+                            )
+                            Text(
+                                text = stringResource(R.string.feels_like) + " " + weather.feelsLike,
                                 style = contentStyle
                             )
-                            AsyncImage(
-                                model = "https://openweathermap.org/img/wn/${weather.icon}@2x.png",
-                                contentDescription = "",
-                                modifier = Modifier.size(32.dp)
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                Text(
+                                    text = weather.weatherMain,
+                                    style = contentStyle
+                                )
+                                AsyncImage(
+                                    model = "https://openweathermap.org/img/wn/${weather.icon}@2x.png",
+                                    contentDescription = "",
+                                    modifier = Modifier.size(32.dp)
+                                )
+                            }
+
+                            VerticalScreenSpacer(height = 48.dp)
+
+                            Column {
+                                Text(text = stringResource(R.string.humidity) + " " + weather.humidity)
+                                Text(text = stringResource(R.string.pressure) + " " + weather.pressure)
+                                Text(text = stringResource(R.string.wind_speed) + " " + weather.windSpeed.toString())
+                            }
                         }
 
-                        VerticalScreenSpacer(height = 48.dp)
-
-                        Column {
-                            Text(text = stringResource(R.string.humidity) + " " + weather.humidity)
-                            Text(text = stringResource(R.string.pressure) + " " + weather.pressure)
-                            Text(text = stringResource(R.string.wind_speed) + " " + weather.windSpeed.toString())
-                        }
                     }
 
+                    ToWeeklyWeatherButton(
+                        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp),
+                        onClick = { navigator push WeeklyScreen })
                 }
-
-                ToWeeklyWeatherButton(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    onClick = { navigator push WeeklyScreen })
             }
         }
     }

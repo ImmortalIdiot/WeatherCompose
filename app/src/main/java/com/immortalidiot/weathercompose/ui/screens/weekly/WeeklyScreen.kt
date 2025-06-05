@@ -20,6 +20,7 @@ import com.immortalidiot.weathercompose.R
 import com.immortalidiot.weathercompose.ui.components.ForecastCard
 import com.immortalidiot.weathercompose.ui.components.PermissionHandler
 import com.immortalidiot.weathercompose.ui.components.bars.ApplicationAppBar
+import com.immortalidiot.weathercompose.ui.screens.ScreenStateHandler
 
 object WeeklyScreen : Screen {
     private fun readResolve(): Any = WeeklyScreen
@@ -33,7 +34,9 @@ object WeeklyScreen : Screen {
 
 @Composable
 private fun WeeklyScreenComposable(viewModel: WeeklyViewModel) {
-    val forecasts = viewModel.forecasts.collectAsState().value
+    val uiState = viewModel.uiState.collectAsState().value
+    val forecasts = viewModel.forecasts.collectAsState().value ?: emptyList()
+
     val navigator = LocalNavigator.currentOrThrow
 
     Scaffold(
@@ -51,18 +54,21 @@ private fun WeeklyScreenComposable(viewModel: WeeklyViewModel) {
             rationaleText = stringResource(R.string.need_geo_position),
             deniedText = stringResource(R.string.geo_position_denied)
         ) {
-            LazyColumn(
+            ScreenStateHandler(
+                state = uiState,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                items(forecasts) { forecast ->
-                    ForecastCard(
-                        forecast = forecast,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(forecasts) { forecast ->
+                        ForecastCard(
+                            forecast = forecast,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+                    }
                 }
             }
         }

@@ -7,6 +7,9 @@
     <string name="longitude">Долгота:</string>
     <string name="feels_like">Ощущается как:</string>
 
+    <string name="error">Ошибка:</string>
+    <string name="retry">Повторить</string>
+
     <string name="forecast">Погода на неделю</string>
     <string name="avg_temp">Средняя температура:</string>
     <string name="weather">Погода:</string>
