@@ -10,6 +10,7 @@ ksp = "2.1.20-2.0.1"
 hilt = "2.56.2"
 retrofit = "2.11.0"
 playServicesLocation = "21.3.0"
+coil = "3.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,9 @@ retrofit-converter-json = { group = "com.squareup.retrofit2", name = "converter-
 
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 play-services-coroutines = {group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version = "1.10.2" }
+
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">WeatherCompose</string>
+
+    <string name="forecast">Погода на неделю</string>
+    <string name="avg_temp">Средняя температура:</string>
+    <string name="weather">Погода:</string>
+    <string name="humidity">Влажность:</string>
+    <string name="pressure">Давление:</string>
+    <string name="wind_speed">Скорость ветра:</string>
+    <string name="celsius_temp_scale">°C</string>
+    <string name="pressure_scale">кПа</string>
+    <string name="speed_scale">км/ч</string>
 </resources>
